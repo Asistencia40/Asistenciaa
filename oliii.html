@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Activar Asistencia - Profesor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 420px;
+      padding: 2.5em;
+      text-align: center;
+      border-top: 8px solid #FFCC00;
+    }
+
+    h2 {
+      color: #00264D;
+      margin-bottom: 1.5em;
+      font-size: 1.6em;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 0.9em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1.5em;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9em;
+      font-size: 1em;
+      background-color: #FFCC00;
+      color: #00264D;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #e6b800;
+    }
+
+    #estado {
+      margin-top: 1.5em;
+      font-weight: 600;
+      color: #00264D;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 2em 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Activar Registro de Asistencia</h2>
+    <input type="password" id="clave" placeholder="Clave secreta del profesor" required>
+    <button onclick="enviarClave()">Activar asistencia</button>
+    <p id="estado"></p>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz0sEHETx87SFBNsPelISI7vr9SFMheusMtoHf4Yy-8oXLl6Doo7jd-RMrh5xFX6dpx/exec";
+
+    async function enviarClave() {
+      const clave = document.getElementById("clave").value.trim();
+      const estado = document.getElementById("estado");
+
+      if (!clave) {
+        estado.innerText = "❌ Debes ingresar la clave";
+        return;
+      }
+
+      estado.innerText = "⏳ Enviando correos...";
+
+      try {
+        const formData = new FormData();
+        formData.append("clave", clave);
+
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
+
+        const txt = await res.text();
+        estado.innerText = txt;
+      } catch (err) {
+        estado.innerText = "❌ Error al contactar con el servidor";
+      }
+    }
+  </script>
+</body>
+</html>
